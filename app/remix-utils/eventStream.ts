@@ -1,5 +1,5 @@
 // https://github.com/sergiodxa/remix-utils/blob/main/src/server/event-stream.ts
-interface SendFunctionArgs {
+export interface SendFunctionArgs {
   /**
    * @default "message"
    */
@@ -7,19 +7,19 @@ interface SendFunctionArgs {
   data: string
 }
 
-interface SendFunction {
+export interface SendFunction {
   (args: SendFunctionArgs): void
 }
 
-interface CleanupFunction {
+export interface CleanupFunction {
   (): void
 }
 
-interface AbortFunction {
+export interface AbortFunction {
   (): void
 }
 
-interface InitFunction {
+export interface InitFunction {
   (send: SendFunction, abort: AbortFunction): CleanupFunction
 }
 
@@ -34,16 +34,16 @@ export function eventStream(
   init: InitFunction,
   options: ResponseInit = {},
 ) {
-  let stream = new ReadableStream({
+  const stream = new ReadableStream({
     start(controller) {
-      let encoder = new TextEncoder()
+      const encoder = new TextEncoder()
 
       function send({event = 'message', data}: SendFunctionArgs) {
         controller.enqueue(encoder.encode(`event: ${event}\n`))
         controller.enqueue(encoder.encode(`data: ${data}\n\n`))
       }
 
-      let cleanup = init(send, close)
+      const cleanup = init(send, close)
 
       let closed = false
 
@@ -61,7 +61,7 @@ export function eventStream(
     },
   })
 
-  let headers = new Headers(options.headers)
+  const headers = new Headers(options.headers)
 
   if (headers.has('Content-Type')) {
     console.warn('Overriding Content-Type header to `text/event-stream`')

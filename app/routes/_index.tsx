@@ -2,8 +2,6 @@ import type { MetaFunction } from "@vercel/remix";
 import { Log } from "~/components/Log";
 import { Report } from "~/components/Report";
 
-export const config = {runtime: 'edge'}
-
 export const meta: MetaFunction = () => {
   return [
     { title: "New Remix App" },

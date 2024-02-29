@@ -1,4 +1,4 @@
-import { emitter } from "~/services/emitter.server";
+import { emitter } from "~/services/emitter";
 
 export const action = async () => {
   emitter.emit("message", `Hello, world! ${new Date().toISOString()}`);
