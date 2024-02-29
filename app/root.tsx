@@ -8,6 +8,8 @@ import {
   ScrollRestoration,
 } from "@remix-run/react";
 
+export const config = {runtime: 'edge'}
+
 import stylesheet from "~/tailwind.css";
 
 export const links: LinksFunction = () => [
