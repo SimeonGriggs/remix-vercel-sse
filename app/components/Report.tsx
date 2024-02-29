@@ -5,9 +5,10 @@ export function Report() {
   return (
     <fetcher.Form method="post" action="/resource/report">
       <input
-        className="rounded bg-blue-500 text-white p-2"
+        className="rounded bg-blue-500 text-white p-2 disabled:opacity-25 transition-opacity duration-100"
+        disabled={fetcher.state !== 'idle'}
         type="submit"
-        value="Send Report"
+        value="Request Report"
       />
     </fetcher.Form>
   );

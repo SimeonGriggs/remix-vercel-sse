@@ -15,8 +15,8 @@ export default function Index() {
       <div className="prose lg:prose-xl">
         <h1>Remix, Vercel and Server-sent Events</h1>
       </div>
-      <Log />
       <Report />
+      <Log />
     </div>
   );
 }

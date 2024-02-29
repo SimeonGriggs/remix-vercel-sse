@@ -1,7 +1,7 @@
 import type {LoaderFunctionArgs} from '@vercel/remix'
 
 import {eventStream} from '~/remix-utils/eventStream'
-import {emitter} from '~/services/emitter'
+import {emitter} from '~/services/emitter.server'
 
 type Message = string
 
