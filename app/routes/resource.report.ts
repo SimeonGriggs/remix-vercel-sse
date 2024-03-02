@@ -1,5 +1,7 @@
 import { emitter } from "~/services/emitter.server";
 
+export const config = {runtime: 'edge'}
+
 export const action = async () => {
   emitter.emit("message", `Hello, world! ${new Date().toISOString()}`);
 
