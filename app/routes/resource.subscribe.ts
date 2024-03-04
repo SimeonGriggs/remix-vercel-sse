@@ -14,9 +14,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
       send({ event: "message", data: message });
     }
 
+    console.log(`Opening stream: ${new Date().toISOString()}`);
     emitter.on("message", handle);
 
     return function clear() {
+      console.log(`Closing stream: ${new Date().toISOString()}`);
       emitter.off("message", handle);
     };
   });
