@@ -23,6 +23,8 @@ export async function loader({request}: LoaderFunctionArgs) {
 
   console.log('content-type', stream.headers.get('content-type'))
 
+  stream.headers.set('Access-Control-Allow-Origin', request.headers.get('origin') ?? '*')
+
   // Required on Vercel?
   // https://github.com/vercel/next.js/discussions/48427#discussioncomment-5624579
   stream.headers.set("Connection", "keep-alive");
