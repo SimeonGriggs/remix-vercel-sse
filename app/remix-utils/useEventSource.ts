@@ -45,6 +45,7 @@ export function useEventSource(
     setData(null)
 
     function handler(event: MessageEvent) {
+      console.log(`useEventSource handler:`, event)
       setData(event.data || 'UNKNOWN_EVENT_DATA')
     }
 

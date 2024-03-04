@@ -8,9 +8,10 @@ type Message = string
 export const config = {runtime: 'edge'}
 
 export async function loader({request}: LoaderFunctionArgs) {
-  return eventStream(request.signal, function setup(send) {
+  const stream = eventStream(request.signal, function setup(send) {
     function handle(message: Message) {
-      send({event: 'new-message', data: message})
+      console.log(`Handling message: ${message}`)
+      send({event: 'message', data: message})
     }
 
     emitter.on('message', handle)
@@ -19,4 +20,15 @@ export async function loader({request}: LoaderFunctionArgs) {
       emitter.off('message', handle)
     }
   })
+
+  console.log('content-type', stream.headers.get('content-type'))
+
+  // Required on Vercel?
+  // https://github.com/vercel/next.js/discussions/48427#discussioncomment-5624579
+  stream.headers.set("Connection", "keep-alive");
+  stream.headers.set("Content-Encoding", "none");
+  stream.headers.set("Cache-Control", "no-cache, no-transform");
+  stream.headers.set("Content-Type", "text/event-stream");
+
+  return stream
 }

@@ -3,24 +3,24 @@ export interface SendFunctionArgs {
   /**
    * @default "message"
    */
-  event?: string
-  data: string
+  event?: string;
+  data: string;
 }
 
 export interface SendFunction {
-  (args: SendFunctionArgs): void
+  (args: SendFunctionArgs): void;
 }
 
 export interface CleanupFunction {
-  (): void
+  (): void;
 }
 
 export interface AbortFunction {
-  (): void
+  (): void;
 }
 
 export interface InitFunction {
-  (send: SendFunction, abort: AbortFunction): CleanupFunction
+  (send: SendFunction, abort: AbortFunction): CleanupFunction;
 }
 
 /**
@@ -32,52 +32,56 @@ export interface InitFunction {
 export function eventStream(
   signal: AbortSignal,
   init: InitFunction,
-  options: ResponseInit = {},
+  options: ResponseInit = {}
 ) {
   const stream = new ReadableStream({
     start(controller) {
-      const encoder = new TextEncoder()
+      const encoder = new TextEncoder();
 
-      function send({event = 'message', data}: SendFunctionArgs) {
-        controller.enqueue(encoder.encode(`event: ${event}\n`))
-        controller.enqueue(encoder.encode(`data: ${data}\n\n`))
+      function send({ event = "message", data }: SendFunctionArgs) {
+        console.log({ event, data });
+        controller.enqueue(encoder.encode(`event: ${event}\n`));
+        controller.enqueue(encoder.encode(`data: ${data}\n\n`));
+
+        // log the message to the console
+        console.log(`Sending message: ${data}`, controller.desiredSize);
       }
 
-      const cleanup = init(send, close)
+      const cleanup = init(send, close);
 
-      let closed = false
+      let closed = false;
 
       function close() {
-        if (closed) return
-        cleanup()
-        closed = true
-        signal.removeEventListener('abort', close)
-        controller.close()
+        if (closed) return;
+        cleanup();
+        closed = true;
+        signal.removeEventListener("abort", close);
+        controller.close();
       }
 
-      signal.addEventListener('abort', close)
+      signal.addEventListener("abort", close);
 
-      if (signal.aborted) return close()
+      if (signal.aborted) return close();
     },
-  })
+  });
 
-  const headers = new Headers(options.headers)
+  const headers = new Headers(options.headers);
 
-  if (headers.has('Content-Type')) {
-    console.warn('Overriding Content-Type header to `text/event-stream`')
+  if (headers.has("Content-Type")) {
+    console.warn("Overriding Content-Type header to `text/event-stream`");
   }
 
-  if (headers.has('Cache-Control')) {
-    console.warn('Overriding Cache-Control header to `no-cache`')
+  if (headers.has("Cache-Control")) {
+    console.warn("Overriding Cache-Control header to `no-cache`");
   }
 
-  if (headers.has('Connection')) {
-    console.warn('Overriding Connection header to `keep-alive`')
+  if (headers.has("Connection")) {
+    console.warn("Overriding Connection header to `keep-alive`");
   }
 
-  headers.set('Content-Type', 'text/event-stream')
-  headers.set('Cache-Control', 'no-cache')
-  headers.set('Connection', 'keep-alive')
+  headers.set("Content-Type", "text/event-stream");
+  headers.set("Cache-Control", "no-cache");
+  headers.set("Connection", "keep-alive");
 
-  return new Response(stream, {headers})
+  return new Response(stream, { headers });
 }
