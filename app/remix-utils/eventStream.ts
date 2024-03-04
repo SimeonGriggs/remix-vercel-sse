@@ -44,7 +44,7 @@ export function eventStream(
         controller.enqueue(encoder.encode(`data: ${data}\n\n`));
 
         // log the message to the console
-        console.log(`Sending message: ${data}`, controller.desiredSize);
+        console.log(`Sending message: ${data}`);
       }
 
       const cleanup = init(send, close);
