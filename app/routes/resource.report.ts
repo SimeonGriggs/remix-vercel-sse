@@ -2,13 +2,6 @@ import { emitter } from "~/services/emitter.server";
 
 export const config = { runtime: "edge" };
 
-export const headers = {
-  Connection: "keep-alive",
-  "Content-Type": "text/event-stream",
-  "Cache-Control": "no-cache, no-transform",
-  "Content-Encoding": "none",
-};
-
 export const action = async () => {
   emitter.emit("message", `Hello, world! ${new Date().toISOString()}`);
 
@@ -22,12 +15,5 @@ export const action = async () => {
 
   await new Promise((resolve) => setTimeout(resolve, 500));
 
-  const headers = new Headers()
-
-  // headers.set("Connection", "keep-alive");
-  headers.set("Content-Encoding", "none");
-  headers.set("Cache-Control", "no-cache, no-transform");
-  // headers.set("Content-Type", "text/event-stream");
-
-  return new Response("OK", {headers});
+  return new Response("OK");
 };
